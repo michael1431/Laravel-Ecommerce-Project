@@ -11,7 +11,9 @@
 |
 */
 
+// display user homepage
 Route::get('/','Frontend\PagesController@index')->name('index');
+// display contact page
 Route::get('/contact','Frontend\PagesController@contact')->name('contact');
 
 /*
@@ -21,14 +23,16 @@ Route::get('/contact','Frontend\PagesController@contact')->name('contact');
 */
 
 Route::group(['prefix' => 'products'],function(){
-
+	// display all products
 Route::get('/','Frontend\ProductsController@index')->name('products');
+// link the products using slug
 Route::get('/{slug}','Frontend\ProductsController@show')->name('products.show');
+// product search by user
 Route::get('/new/search','Frontend\PagesController@search')->name('search');
 
-// Category routes
-
+// Category route
 Route::get('/categories','Frontend\CategoriesController@index')->name('categories.index');
+// show individual category prodcts
 Route::get('/category/{id}','Frontend\CategoriesController@show')->name('categories.show');
 
 
@@ -38,10 +42,13 @@ Route::get('/category/{id}','Frontend\CategoriesController@show')->name('categor
 //  Cart Routes
 
 Route::group(['prefix' => 'carts'],function(){
-	
+// show cart page	
 Route::get('/','Frontend\CartsController@index')->name('carts');
+// carts data store into db
 Route::post('/store','Frontend\CartsController@store')->name('carts.store');
+// carts update data store into db
 Route::post('/update/{id}','Frontend\CartsController@update')->name('carts.update');
+// carts data delete
 Route::post('/delete/{id}','Frontend\CartsController@destroy')->name('carts.delete');
 
 
@@ -51,8 +58,9 @@ Route::post('/delete/{id}','Frontend\CartsController@destroy')->name('carts.dele
 //  Checkout Routes
 
 Route::group(['prefix' => 'checkout'],function(){
-	
+	// show checkout page	
 Route::get('/','Frontend\CheckoutsController@index')->name('checkouts');
+// checkout data store into db
 Route::post('/store','Frontend\CheckoutsController@store')->name('checkouts.store');
 
 });
@@ -61,10 +69,15 @@ Route::post('/store','Frontend\CheckoutsController@store')->name('checkouts.stor
 // User Routes
 
 Route::group(['prefix' => 'user'],function(){
+	// user routes for verification
 Route::get('/token/{token}','Frontend\VerificationController@verify')->name('user.verification');
+// user routes to show dashboard
 Route::get('/dashboard','Frontend\UsersController@dashboard')->name('user.dashboard');
+// show user
 Route::get('/profile','Frontend\UsersController@profile')->name('user.profile');
+// user profile update
 Route::post('/profile/update','Frontend\UsersController@updateProfile')->name('user.profile.update');
+// logout user
 Route::post('/logout','Auth\LoginController@userLogout')->name('user.logout');
 
 });
@@ -81,7 +94,9 @@ Route::group(['prefix' => 'admin'],function(){
 
 //Route::get('/login','Auth\Admin\LoginController@showLoginForm')->name('admin.login');
 
+// log in action
 Route::post('/login/submit','Auth\Admin\LoginController@login')->name('admin.login.submit');
+// show admin login form
 
 Route::get('/login','Auth\Admin\LoginController@showLoginForm')->name('admin.login')->middleware('access');
 
@@ -90,7 +105,7 @@ Route::group(['middleware'=>'logUser'],function(){
 	Route::get('/','Backend\PagesController@index')->name('admin.index');
 	});
 
-
+// admin logout
 Route::post('/logout','Auth\Admin\LoginController@logout')->name('admin.logout');
 
 //Password Email Send
@@ -110,17 +125,20 @@ Route::post('/password/reset','Auth\Admin\ResetPasswordController@reset')->name(
 // Product Routes
 
 Route::group(['prefix' => '/products'],function(){
-
+	// view all products
 Route::get('/','Backend\ProductsController@index')->name('admin.products');
+// view product insert form
 
 Route::get('/create','Backend\ProductsController@create')->name('admin.product.create');
-
+// view product edit form of their respective id 
 Route::get('/edit/{id}','Backend\ProductsController@edit')->name('admin.product.edit');
-
+  // product store into db via post method
 
 Route::post('/store','Backend\ProductsController@store')->name('admin.product.store');
+// update product edit form by their respective id
 
 Route::post('/product/update/{id}','Backend\ProductsController@update')->name('admin.product.update');
+// delete product from db
 
 Route::post('/product/delete/{id}','Backend\ProductsController@delete')->name('admin.product.delete');
 
@@ -131,17 +149,24 @@ Route::post('/product/delete/{id}','Backend\ProductsController@delete')->name('a
 // Orders Routes
 
 Route::group(['prefix' => '/orders'],function(){
+	// view all orders
 
 Route::get('/','Backend\OrdersController@index')->name('admin.orders');
+// view individual user order
 
 Route::get('/view/{id}','Backend\OrdersController@show')->name('admin.order.show');
+// delete order from db
 
 Route::post('/delete/{id}','Backend\OrdersController@delete')->name('admin.order.delete');
+// order completetion by admin
 
 Route::post('/completed/{id}','Backend\OrdersController@completed')->name('admin.order.completed');
+// order paid confirm by admin
 
 Route::post('/paid/{id}','Backend\OrdersController@paid')->name('admin.order.paid');
+// updated charge on products by admin
 Route::post('/charge-update/{id}','Backend\OrdersController@chargeUpdate')->name('admin.order.charge');
+// generate pdf invoice
 Route::get('/invoice/{id}','Backend\OrdersController@generateInvoice')->name('admin.order.invoice');
 
 });
@@ -150,18 +175,19 @@ Route::get('/invoice/{id}','Backend\OrdersController@generateInvoice')->name('ad
 // Category Routes
 
 Route::group(['prefix' => '/categories'],function(){
+	// view all categories
 
 Route::get('/','Backend\CategoriesController@index')->name('admin.categories');
-
+// view category insert form
 Route::get('/create','Backend\CategoriesController@create')->name('admin.category.create');
-
+// view category edit form
 Route::get('/edit/{id}','Backend\CategoriesController@edit')->name('admin.category.edit');
 
-
+// category store into db via post method
 Route::post('/store','Backend\CategoriesController@store')->name('admin.category.store');
-
+// update category edit form
 Route::post('/category/update/{id}','Backend\CategoriesController@update')->name('admin.category.update');
-
+// delete category from db
 Route::post('/category/delete/{id}','Backend\CategoriesController@delete')->name('admin.category.delete');
 
 });
@@ -170,18 +196,18 @@ Route::post('/category/delete/{id}','Backend\CategoriesController@delete')->name
 // Brand Routes
 
 Route::group(['prefix' => '/brands'],function(){
-
+// view all brands
 Route::get('/','Backend\BrandsController@index')->name('admin.brands');
-
+// view brand insert form
 Route::get('/create','Backend\BrandsController@create')->name('admin.brand.create');
-
+// view brand edit form
 Route::get('/edit/{id}','Backend\BrandsController@edit')->name('admin.brand.edit');
-
+ // brand store into db via post method
 
 Route::post('/store','Backend\BrandsController@store')->name('admin.brand.store');
-
+// update brand edit form
 Route::post('/brand/update/{id}','Backend\BrandsController@update')->name('admin.brand.update');
-
+// delete brand from db
 Route::post('/brand/delete/{id}','Backend\BrandsController@delete')->name('admin.brand.delete');
 
 });
@@ -190,18 +216,18 @@ Route::post('/brand/delete/{id}','Backend\BrandsController@delete')->name('admin
 // Division Routes
 
 Route::group(['prefix' => '/divisions'],function(){
-
+// view all divisions
 Route::get('/','Backend\DivisionsController@index')->name('admin.divisions');
-
+// view division insert form
 Route::get('/create','Backend\DivisionsController@create')->name('admin.division.create');
-
+// view division edit form
 Route::get('/edit/{id}','Backend\DivisionsController@edit')->name('admin.division.edit');
-
+// division store into db via post method
 
 Route::post('/store','Backend\DivisionsController@store')->name('admin.division.store');
-
+// update division edit form
 Route::post('/division/update/{id}','Backend\DivisionsController@update')->name('admin.division.update');
-
+// delete division from db
 Route::post('/division/delete/{id}','Backend\DivisionsController@delete')->name('admin.division.delete');
 
 });
@@ -210,18 +236,18 @@ Route::post('/division/delete/{id}','Backend\DivisionsController@delete')->name(
 // Districts Routes
 
 Route::group(['prefix' => '/districts'],function(){
-
+// view all districts
 Route::get('/','Backend\DistrictsController@index')->name('admin.districts');
-
+// view district insert form
 Route::get('/create','Backend\DistrictsController@create')->name('admin.district.create');
-
+// view district edit form
 Route::get('/edit/{id}','Backend\DistrictsController@edit')->name('admin.district.edit');
-
+// district store into db via post method
 
 Route::post('/store','Backend\DistrictsController@store')->name('admin.district.store');
-
+// update district edit form
 Route::post('/district/update/{id}','Backend\DistrictsController@update')->name('admin.district.update');
-
+// delete district from db
 Route::post('/district/delete/{id}','Backend\DistrictsController@delete')->name('admin.district.delete');
 
 });
@@ -229,15 +255,15 @@ Route::post('/district/delete/{id}','Backend\DistrictsController@delete')->name(
 // Slider Routes
 
 Route::group(['prefix' => '/sliders'],function(){
-
+// view all sliders
 Route::get('/','Backend\SlidersController@index')->name('admin.sliders');
-
+	// view slider edit model
 Route::get('/edit/{id}','Backend\SlidersController@edit')->name('admin.slider.edit');
-
+// store slide into db by post method
 Route::post('/store','Backend\SlidersController@store')->name('admin.slider.store');
-
+// update slider
 Route::post('/slider/update/{id}','Backend\SlidersController@update')->name('admin.slider.update');
-
+// delete slider
 Route::post('/slider/delete/{id}','Backend\SlidersController@delete')->name('admin.slider.delete');
 
 });
@@ -255,7 +281,7 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
 // API routes
-
+// dependent dropdown list 
 Route::get('get-districts/{id}',function($id){
 	
  return  json_encode( App\Models\District::where('division_id', $id)->get());
